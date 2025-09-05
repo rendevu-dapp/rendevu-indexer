@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, Registration, RegistrationStatus } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -38,5 +41,14 @@ export async function handleRegistrationRejected(ctx: Context, log: Log) {
   await ctx.store.upsert(registration);
   ctx.log.info(
     `Registration rejected for event ${event.id} attendee ${attendee}.`
+  );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-registration", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(
+    `Registration rejection added to sync queue: ${registration.id}`
   );
 }

@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, EventToken, Payment, Registration } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -54,4 +57,11 @@ export async function handlePaymentReceived(ctx: Context, log: Log) {
   ctx.log.info(
     `Payment received for event ${event.id} token ${paymentToken} amount ${amount} from ${payer}.`
   );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-payment", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(`Payment added to sync queue: ${payment.id}`);
 }

@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, Profit } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -34,4 +37,11 @@ export async function handleProfitGenerated(ctx: Context, log: Log) {
   ctx.log.info(
     `Profit generated event processed for event ${eventId} token ${token}.`
   );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-profit", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(`Profit added to sync queue: ${profit.id}`);
 }

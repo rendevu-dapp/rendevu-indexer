@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, EventToken } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -36,4 +39,11 @@ export async function handleTicketPriceUpdated(ctx: Context, log: Log) {
   ctx.log.info(
     `Ticket price updated for event ${eventId} token ${paymentToken} to ${ticketPrice}.`
   );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-ticket-price", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(`Ticket price update added to sync queue: ${eventToken.id}`);
 }

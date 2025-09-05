@@ -1,15 +1,36 @@
 // abis
 import * as eventPlatformAbi from "./abi/event-platform";
 
+// configs
+import { ensureCollections } from "./common/configs";
+
 // processor
 import { db, processor } from "./processor";
 
 // handlers
-import { handleEventCreated, handleEventUpdated, handleEventCancelled, handleTicketIssued, handleTicketPriceUpdated, handleCheckedIn, handleRegistrationPending, handleRegistrationApproved, handleRegistrationRejected, handlePaymentReceived, handleRefundIssued, handleTokenWhitelisted, handleProfitWithdrawn, handleProfitGenerated } from "./handlers";
+import {
+  handleEventCreated,
+  handleEventUpdated,
+  handleEventCancelled,
+  handleTicketIssued,
+  handleTicketPriceUpdated,
+  handleCheckedIn,
+  handleRegistrationPending,
+  handleRegistrationApproved,
+  handleRegistrationRejected,
+  handlePaymentReceived,
+  handleRefundIssued,
+  handleTokenWhitelisted,
+  handleProfitWithdrawn,
+  handleProfitGenerated,
+} from "./handlers";
 
 const CONTRACT_ADDRESS = "0xE3fE5E26010Ce744264f58889cefd7Fd5bE62e4c";
 
 processor.run(db, async (ctx) => {
+  // ensure the Typesense collections are created
+  await ensureCollections();
+
   for (let block of ctx.blocks) {
     for (let log of block.logs) {
       // get the event platform contract instance

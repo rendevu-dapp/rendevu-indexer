@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Ticket } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -25,4 +28,11 @@ export async function handleCheckedIn(ctx: Context, log: Log) {
   await ctx.store.upsert(ticket);
 
   ctx.log.info(`Ticket checked in for event ${eventId} attendee ${attendee}.`);
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-check-in", {
+    eventId: eventId.toString(),
+    block: log.block,
+  });
+  ctx.log.info(`Check-in added to sync queue: ${ticket.id}`);
 }

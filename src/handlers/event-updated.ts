@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, EventMetadata, EventToken, Location } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // helpers
 import { fetchEventMetadata, getVenueType } from "../common/helpers";
 
@@ -127,4 +130,11 @@ export async function handleEventUpdated(
   ctx.log.info(
     `Event updated: ${existingEvent.metadata.title} organized by ${existingEvent.organizer}`
   );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-event", {
+    eventId: existingEvent.id,
+    block: log.block,
+  });
+  ctx.log.info(`Event update added to sync queue: ${existingEvent.id}`);
 }

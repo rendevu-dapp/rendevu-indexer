@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, Payment } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -33,4 +36,11 @@ export async function handleRefundIssued(ctx: Context, log: Log) {
   ctx.log.info(
     `Refund issued for payment ${paymentId} for event ${eventId} attendee ${attendee}.`
   );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-refund", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(`Refund issued added to sync queue: ${paymentId}`);
 }

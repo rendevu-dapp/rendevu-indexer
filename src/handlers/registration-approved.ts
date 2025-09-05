@@ -4,6 +4,9 @@ import * as eventPlatformAbi from "../abi/event-platform";
 // models
 import { Event, Registration, RegistrationStatus } from "../model";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -41,4 +44,11 @@ export async function handleRegistrationApproved(ctx: Context, log: Log) {
   ctx.log.info(
     `Registration approved for event ${event.id} attendee ${attendee}.`
   );
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-registration", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(`Registration approval added to sync queue: ${registration.id}`);
 }

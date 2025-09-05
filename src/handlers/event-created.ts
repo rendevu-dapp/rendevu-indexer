@@ -7,6 +7,9 @@ import { Event, EventMetadata, EventToken, Location } from "../model";
 // helpers
 import { fetchEventMetadata, getVenueType } from "../common/helpers";
 
+// configs
+import { syncEventsQueue } from "../common/configs";
+
 // types
 import type { Context, Log } from "../processor";
 
@@ -104,4 +107,12 @@ export async function handleEventCreated(
       await ctx.store.upsert(paymentTokens);
     }
   }
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-event", {
+    eventId: newEvent.id,
+    block: log.block,
+  });
+
+  ctx.log.info(`Event creation added to sync queue: ${newEvent.id}`);
 }
