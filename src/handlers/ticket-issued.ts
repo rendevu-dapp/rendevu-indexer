@@ -49,4 +49,11 @@ export async function handleTicketIssued(ctx: Context, log: Log) {
   }
 
   ctx.log.info(`Ticket issued for event ${event.id} to attendee ${attendee}.`);
+
+  // add the event to the sync queue
+  await syncEventsQueue.add("sync-ticket", {
+    eventId: event.id,
+    block: log.block,
+  });
+  ctx.log.info(`Ticket issuance added to sync queue: ${ticket.id}`);
 }
