@@ -5,8 +5,8 @@ import type { EventParams as EParams, FunctionArguments, FunctionReturn } from '
 export const events = {
     CheckedIn: event("0x70790c0ab38e2aca9b5520985fe66db2a3700c3680b61c3853b5554f67a2c31c", "CheckedIn(uint256,address)", {"eventId": indexed(p.uint256), "attendee": indexed(p.address)}),
     EventCancelled: event("0xdc3cb569b066460f4a22dffa05317bdcce5d3826382ed49a21f13e5fa2063d39", "EventCancelled(uint256)", {"eventId": indexed(p.uint256)}),
-    EventCreated: event("0x3e1e16dc53562886fa9ab2acde567c1067c24a0c4daad0e47ab75c7b194a90ed", "EventCreated(uint256,address,string,uint256,uint256)", {"eventId": indexed(p.uint256), "organizer": indexed(p.address), "metadataHash": indexed(p.string), "startDate": p.uint256, "endDate": p.uint256}),
-    EventUpdated: event("0xdec0c072be7f169eb2bb4b8623c860aeea68e353d2d2d4982929b7e3744ba355", "EventUpdated(uint256,string,uint256,uint256)", {"eventId": indexed(p.uint256), "metadataHash": indexed(p.string), "startDate": p.uint256, "endDate": p.uint256}),
+    EventCreated: event("0x3e1e16dc53562886fa9ab2acde567c1067c24a0c4daad0e47ab75c7b194a90ed", "EventCreated(uint256,address,string,uint256,uint256)", {"eventId": indexed(p.uint256), "organizer": indexed(p.address), "metadataHash": p.string, "startDate": p.uint256, "endDate": p.uint256}),
+    EventUpdated: event("0xdec0c072be7f169eb2bb4b8623c860aeea68e353d2d2d4982929b7e3744ba355", "EventUpdated(uint256,string,uint256,uint256)", {"eventId": indexed(p.uint256), "metadataHash": p.string, "startDate": p.uint256, "endDate": p.uint256}),
     OwnershipTransferred: event("0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0", "OwnershipTransferred(address,address)", {"previousOwner": indexed(p.address), "newOwner": indexed(p.address)}),
     Paused: event("0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258", "Paused(address)", {"account": p.address}),
     PaymentReceived: event("0x3df2dc7c3520e3eae9e0204ceb677606a01bb80f05dbbbc6613e951fe194faac", "PaymentReceived(uint256,address,address,uint256)", {"eventId": indexed(p.uint256), "payer": indexed(p.address), "paymentToken": indexed(p.address), "amount": p.uint256}),
