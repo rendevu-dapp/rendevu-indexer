@@ -33,7 +33,7 @@ export const processor = new EvmBatchProcessor()
     from: 35116770, 
   })
   .addLog({
-    address: ["0xE3fE5E26010Ce744264f58889cefd7Fd5bE62e4c"],
+    address: ["0x0551c568a3FaBDc2b0259d82893F41f31C041328"],
     topic0: [
       // events
       eventPlatformAbi.events.EventCancelled.topic,

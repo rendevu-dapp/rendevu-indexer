@@ -25,7 +25,7 @@ import {
   handleProfitGenerated,
 } from "./handlers";
 
-const CONTRACT_ADDRESS = "0xE3fE5E26010Ce744264f58889cefd7Fd5bE62e4c";
+const CONTRACT_ADDRESS = "0x0551c568a3FaBDc2b0259d82893F41f31C041328";
 
 processor.run(db, async (ctx) => {
   // ensure the Typesense collections are created
