@@ -1,0 +1,136 @@
+type Event @entity {
+  id: ID! # eventId as Bytes
+  eventId: BigInt! @index
+  organizer: String! @index # etheruem address
+  metadataHash: String!
+  metadata: EventMetadata
+  startDate: BigInt! @index
+  endDate: BigInt! @index
+  venueType: String!
+  requiresApproval: Boolean!
+  capacity: BigInt!
+  isActive: Boolean! @index
+  isPaid: Boolean!
+  createdAt: BigInt!
+  updatedAt: BigInt
+  # relations
+  tickets: [Ticket!]! @derivedFrom(field: "event")
+  payments: [Payment!]! @derivedFrom(field: "event")
+  paymentTokens: [EventToken!]! @derivedFrom(field: "event")
+  registrations: [Registration!]! @derivedFrom(field: "event")
+  poaps: [POAP!]! @derivedFrom(field: "event")
+}
+
+type EventMetadata @entity {
+  id: ID! # eventId + metadataHash
+  referenceHash: String!
+  event: Event!
+  title: String!
+  description: String!
+  image: String
+  virtualLink: String
+  location: Location
+}
+
+type Location @entity {
+  id: ID!
+  name: String!
+  address: String
+  latitude: String!
+  longitude: String!
+  placeId: String
+  metadata: EventMetadata!
+}
+
+type EventToken @entity {
+  id: ID! # eventId + tokenAddress
+  event: Event!
+  tokenAddress: String! # etheruem address
+  price: BigInt!
+}
+
+enum RegistrationStatus {
+  NONE
+  PENDING
+  APPROVED
+  DECLINED
+}
+
+type Registration @entity {
+  id: ID! # eventId + attendee
+  event: Event!
+  attendee: String! # etheruem address
+  status: RegistrationStatus!
+  approved: Boolean
+  registeredAt: BigInt!
+  approvedAt: BigInt
+  # relations
+  ticket: Ticket @derivedFrom(field: "registration")
+}
+
+type Ticket @entity {
+  id: ID! # eventId + attendee
+  event: Event!
+  attendee: String! # etheruem address
+  registration: Registration @unique
+  payment: Payment @unique
+  issuedAt: BigInt!
+  isUsed: Boolean! # Indicates if the ticket has been used to check in
+  checkedInAt: BigInt
+}
+
+type WhitelistedToken @entity {
+  id: ID! # token address
+  tokenAddress: String! # etheruem address
+  isWhitelisted: Boolean!
+  updatedAt: BigInt!
+}
+
+type Profit @entity {
+  id: ID!
+  eventId: BigInt
+  token: String! # etheruem address
+  profitAmount: BigInt!
+  withdrawnAmount: BigInt
+  recipient: String # etheruem address
+  createdAt: BigInt!
+  withdrawnAt: BigInt
+  type: String! # Generated or Withdrawn
+}
+
+type Payment @entity {
+  id: ID! # eventId + payer
+  event: Event!
+  payer: String! # etheruem address
+  amount: BigInt!
+  token: EventToken!
+  paymentDate: BigInt!
+  isRefunded: Boolean!
+  # optional back-ref
+  ticket: Ticket @derivedFrom(field: "payment")
+  registration: Registration # Add optional link to Registration
+}
+
+type POAP @entity {
+  id: ID! # poapId in string form
+  poapId: Int! @index
+  fancyId: String! @index
+  name: String!
+  description: String!
+  city: String
+  country: String
+  eventUrl: String
+  imageUrl: String
+  animationUrl: String
+  year: Int
+  startDate: String
+  endDate: String
+  expiryDate: String
+  fromAdmin: Boolean
+  virtualEvent: Boolean
+  eventTemplateId: Int
+  privateEvent: Boolean
+  dropImagePublicId: String
+  dropImageDropId: Int
+  event: Event!
+}
