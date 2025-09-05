@@ -31,14 +31,19 @@ processor.run(db, async (ctx) => {
   // ensure the Typesense collections are created
   await ensureCollections();
 
+  // console.log(`Processing ${ctx.blocks.length} blocks...`);
   for (let block of ctx.blocks) {
+    // console.log("Processing block:", block.header.height);
     for (let log of block.logs) {
+      // console.log("Processing log:", log.topics[0]);
       // get the event platform contract instance
       const eventContract = new eventPlatformAbi.Contract(
         ctx,
         log.block,
         CONTRACT_ADDRESS
       );
+
+      console.log(log.topics[0])
 
       // match the log to the event
       switch (log.topics[0]) {
@@ -105,6 +110,7 @@ processor.run(db, async (ctx) => {
           break;
         // skip logs that are not from the event platform contract
         default:
+          console.log("Skipping log with topic:", log.topics[0]);
           continue; // skip logs that are not from the event platform contract
       }
     }

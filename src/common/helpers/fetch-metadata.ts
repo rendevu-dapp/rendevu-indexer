@@ -16,10 +16,11 @@ type Metadata = {
 export const fetchEventMetadata = async (
   metadataHash: string
 ): Promise<Metadata> => {
-  const response = await fetch(
-    `https://api.thegraph.com/ipfs/api/v0/cat?arg=${metadataHash}`
-  );
+  const targetUrl = `https://api.thegraph.com/ipfs/api/v0/cat?arg=${metadataHash}`;
+  const response = await fetch(targetUrl);
   if (!response.ok) {
+    const data = await response.text();
+    console.log(data);
     throw new Error(`Failed to fetch metadata: ${response.statusText}`);
   }
   return await response.json();

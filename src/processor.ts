@@ -17,7 +17,7 @@ export const db = new TypeormDatabase({ supportHotBlocks: true });
 export const processor = new EvmBatchProcessor()
   // Lookup archive by the network name in Subsquid registry
   // See https://docs.subsquid.io/evm-indexing/supported-networks/
-  .setGateway("https://v2.archive.subsquid.io/network/base-mainnet")
+  .setGateway("https://v2.archive.subsquid.io/network/base-mainnet ")
   // Chain RPC endpoint is required for
   //  - indexing unfinalized blocks https://docs.subsquid.io/basics/unfinalized-blocks/
   //  - querying the contract state https://docs.subsquid.io/evm-indexing/query-state/
@@ -29,18 +29,11 @@ export const processor = new EvmBatchProcessor()
     rateLimit: 10,
   })
   .setFinalityConfirmation(75)
-  .setFields({
-    transaction: {
-      from: true,
-      value: true,
-      hash: true,
-    },
-  })
   .setBlockRange({
     from: 35116770, 
   })
   .addLog({
-    address: ["0xBe75346EA76FdaFB22D86A3Cb9A90e676Ae90803"],
+    address: ["0xE3fE5E26010Ce744264f58889cefd7Fd5bE62e4c"],
     topic0: [
       // events
       eventPlatformAbi.events.EventCancelled.topic,
