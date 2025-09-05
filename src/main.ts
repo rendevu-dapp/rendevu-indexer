@@ -5,7 +5,7 @@ import * as eventPlatformAbi from "./abi/event-platform";
 import { db, processor } from "./processor";
 
 // handlers
-import { handleEventCreated } from "./handlers";
+import { handleEventCreated, handleEventUpdated } from "./handlers";
 
 const CONTRACT_ADDRESS = "0xE3fE5E26010Ce744264f58889cefd7Fd5bE62e4c";
 
@@ -25,6 +25,10 @@ processor.run(db, async (ctx) => {
         case eventPlatformAbi.events.EventCreated.topic:
           // handle event created
           await handleEventCreated(ctx, log, eventContract);
+          break;
+        case eventPlatformAbi.events.EventUpdated.topic:
+          // handle event updated
+          await handleEventUpdated(ctx, log, eventContract);
           break;
         default:
           continue; // skip logs that are not from the event platform contract
